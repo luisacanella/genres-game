@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An interactive web game to practice and master English Text Genres in a fun office environment.">
+  <title>Office Genres: The Game</title>
+  <!-- Google Fonts for pixel and modern corporate look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-container">
+    
+    <!-- ==================== START SCREEN ==================== -->
+    <div id="start-screen" class="screen active">
+      <div class="header-logo">
+        <div class="pixel-building">🏢</div>
+        <h1 class="pixel-title">OFFICE GENRES</h1>
+        <p class="subtitle">Climb the Corporate Ladder with English!</p>
+      </div>
+
+      <div class="card glass">
+        <div class="form-group">
+          <label for="player-name">Enter Your Corporate Name:</label>
+          <input type="text" id="player-name" placeholder="e.g. Dwight, Pam, Jim..." maxlength="15" autocomplete="off">
+        </div>
+
+        <div class="avatar-selection">
+          <p class="section-title">Select Your Character:</p>
+          <div class="avatar-grid">
+            <button class="avatar-btn active" data-avatar="🧑‍💻" data-role="Developer">
+              <span class="avatar-emoji">🧑‍💻</span>
+              <span class="avatar-name">Alex</span>
+            </button>
+            <button class="avatar-btn" data-avatar="👩‍💻" data-role="Designer">
+              <span class="avatar-emoji">👩‍💻</span>
+              <span class="avatar-name">Morgan</span>
+            </button>
+            <button class="avatar-btn" data-avatar="🧑‍💼" data-role="Intern">
+              <span class="avatar-emoji">🧑‍💼</span>
+              <span class="avatar-name">Sam</span>
+            </button>
+            <button class="avatar-btn" data-avatar="👩‍💼" data-role="Consultant">
+              <span class="avatar-emoji">👩‍💼</span>
+              <span class="avatar-name">Taylor</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button id="start-btn" class="btn btn-primary btn-large">Start Game</button>
+          <button id="view-leaderboard-btn" class="btn btn-secondary">View Leaderboard</button>
+        </div>
+      </div>
+
+      <div class="instructions-card glass">
+        <h3>How to Play:</h3>
+        <ul>
+          <li>🚶‍♂️ Walk around the office and solve tasks for your coworkers.</li>
+          <li>📖 Read the English text samples carefully.</li>
+          <li>💡 Identify the correct text genre out of 4 options.</li>
+          <li>❤️ Keep an eye on your 3 Hearts. Mistakes hurt!</li>
+          <li>🔥 Answer quickly and build a streak to get massive score multipliers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ==================== GAME SCREEN ==================== -->
+    <div id="game-screen" class="screen">
+      <!-- Top HUD -->
+      <div class="hud glass">
+        <div class="hud-item player-info">
+          <span id="hud-avatar">🧑‍💻</span>
+          <div>
+            <strong id="hud-username">Player</strong>
+            <small id="hud-role">Intern</small>
+          </div>
+        </div>
+        <div class="hud-item progress-info">
+          <span class="label">STAGE</span>
+          <span id="hud-stage" class="value">1 / 10</span>
+        </div>
+        <div class="hud-item score-info">
+          <span class="label">SCORE</span>
+          <span id="hud-score" class="value score-animate">0</span>
+          <span id="streak-badge" class="badge hidden">Streak x1.5</span>
+        </div>
+        <div class="hud-item health-info">
+          <span class="label">HEARTS</span>
+          <span id="hud-hearts" class="value">❤️❤️❤️</span>
+        </div>
+      </div>
+
+      <!-- Main Game Board -->
+      <div class="game-board">
+        
+        <!-- Office Scenario visual representation -->
+        <div class="office-scene" id="office-scene">
+          <div class="office-floor"></div>
+          <!-- Player Character -->
+          <div class="character player" id="player-sprite">
+            <span class="sprite-emoji" id="player-sprite-emoji">🧑‍💻</span>
+            <span class="speech-bubble hidden" id="player-bubble">Walking...</span>
+          </div>
+          <!-- NPC Colleague -->
+          <div class="character npc" id="npc-sprite">
+            <span class="sprite-emoji" id="npc-sprite-emoji">👔</span>
+            <span class="character-name-plate" id="npc-name">The Boss</span>
+          </div>
+          <!-- Desk Decor -->
+          <div class="office-prop prop-desk-left">📁</div>
+          <div class="office-prop prop-desk-right">💻</div>
+          <div class="office-prop prop-plant">🪴</div>
+        </div>
+
+        <!-- Dialogue Box -->
+        <div class="dialogue-box glass">
+          <strong id="dialogue-speaker">The Boss:</strong>
+          <p id="dialogue-text">"Welcome to the office! I need you to send a formal status update right away."</p>
+        </div>
+
+        <!-- Document / Text Sample Viewer -->
+        <div class="document-viewer glass" id="document-viewer">
+          <div class="document-header">
+            <span class="doc-icon">📄</span>
+            <span class="doc-title">Incoming Document...</span>
+          </div>
+          <div class="document-body">
+            <pre id="text-sample-content">Loading text sample...</pre>
+          </div>
+          <!-- Question Timer Progress Bar -->
+          <div class="timer-container">
+            <div id="timer-bar" class="timer-bar"></div>
+          </div>
+        </div>
+
+        <!-- Interactive Answer choices -->
+        <div class="choices-container">
+          <button class="choice-btn" data-choice="0">Option 1</button>
+          <button class="choice-btn" data-choice="1">Option 2</button>
+          <button class="choice-btn" data-choice="2">Option 3</button>
+          <button class="choice-btn" data-choice="3">Option 4</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== LEADERBOARD / END SCREEN ==================== -->
+    <div id="leaderboard-screen" class="screen">
+      <div class="game-over-banner" id="game-over-title">
+        🎉 CONGRATULATIONS!
+      </div>
+      
+      <div class="card glass leaderboard-card">
+        <div class="final-score-container">
+          <span class="avatar-large" id="final-avatar">🧑‍💻</span>
+          <h2 id="final-username">Dwight</h2>
+          <p>Your Final Corporate Rating:</p>
+          <div class="score-display">
+            <span id="final-score-value">0</span> <small>Points</small>
+          </div>
+          <p id="completion-status" class="completion-msg">You solved all 10 textual tasks!</p>
+        </div>
+
+        <div class="leaderboard-section">
+          <h3>🏆 Corporate Global Leaderboard</h3>
+          <div class="leaderboard-wrapper">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Employee</th>
+                  <th>Department</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-tbody">
+                <tr>
+                  <td colspan="4" class="text-center">Loading board...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="action-buttons mt-4">
+          <button id="restart-btn" class="btn btn-primary">Work Another Shift (Restart)</button>
+          <button id="back-home-btn" class="btn btn-secondary">Main Menu</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Audio elements (Synthesized/Simple web audio triggers inside JS, no extra files needed!) -->
+
+  <!-- App logic imports -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
