@@ -27,7 +27,7 @@ Please find the detailed report attached.
 
 Best regards,
 [Your Name]`,
-    choices: ["e-mail", "Post-it", "Receipt", "Folder"],
+    choices: ["e-mail", "Note", "Receipt", "Leaflet"],
     correct: 0
   },
   {
@@ -67,7 +67,7 @@ Fri | 10:00 - Team Retrospective`,
 -- Hot Drinks --
 * Espresso ......... $2.50
 * Latte Art ........ $3.50`,
-    choices: ["Folder", "Post-it", "Menu", "Letter"],
+    choices: ["Leaflet", "Note", "Menu", "Letter"],
     correct: 2
   },
   {
@@ -94,7 +94,7 @@ THANK YOU!`,
     context: "I went to your desk but you were in a meeting. I left a small yellow sticky note on your monitor with a quick HR reminder.",
     sample: `Don't forget: HR meeting tomorrow at 9 AM in Room B! Bring your ID.
 - Toby`,
-    choices: ["Post-it", "Folder", "Article", "Menu"],
+    choices: ["Note", "Leaflet", "Article", "Menu"],
     correct: 0
   },
   {
@@ -102,13 +102,13 @@ THANK YOU!`,
     npcEmoji: "👨🏾‍💻",
     context: "Hey, sorry to disturb you, but I just sent you a quick, informal text message on your phone. Can you check it?",
     sample: `Hey man! u got a sec? where is the key for the server room? stuck outside lol 🔑`,
-    choices: ["Letter", "WhatsApp message", "Instructions", "Folder"],
+    choices: ["Letter", "text message", "Instructions", "Leaflet"],
     correct: 1
   },
   {
     speaker: "Phyllis (Marketing Specialist)",
     npcEmoji: "👩‍🏫",
-    context: "We are going to a jobs fair tomorrow! I need that trifold paper brochure that introduces our company services to new graduates.",
+    context: "We are going to a jobs fair tomorrow! I need that trifold paper brochure—also known as a leaflet—that introduces our company services to new graduates.",
     sample: `BUILDING THE FUTURE
 
 Who We Are:
@@ -121,7 +121,7 @@ Our Services:
 
 Contact Us:
 careers@techcorp.com | www.techcorp.com`,
-    choices: ["Folder", "Receipt", "Timetable", "Post-it"],
+    choices: ["Leaflet", "Receipt", "Timetable", "Note"],
     correct: 0
   },
   {
@@ -142,7 +142,7 @@ I am writing to formally propose a strategic partnership between our organizatio
 
 Sincerely,
 Ryan Howard`,
-    choices: ["WhatsApp message", "Menu", "Letter", "Instructions"],
+    choices: ["text message", "Menu", "Letter", "Instructions"],
     correct: 2
   },
   {
@@ -153,7 +153,7 @@ Ryan Howard`,
 By Dr. Marcus Vance
 
 In recent years, educational institutions have increasingly adopted game mechanics to enhance student engagement. Research shows that gamified platforms can increase retention rates by up to 40% when combined with traditional curriculum...`,
-    choices: ["Receipt", "Post-it", "Timetable", "Article"],
+    choices: ["Receipt", "Note", "Timetable", "Article"],
     correct: 3
   }
 ];
@@ -169,12 +169,12 @@ let gameState = {
   score: 0,
   streak: 0,
   hearts: 3,
-  timeLeft: 30,
+  timeLeft: 45,
   timerInterval: null,
   isAnswering: false
 };
 
-const TIMER_DURATION = 30; // seconds
+const TIMER_DURATION = 45; // seconds
 
 /* ==========================================================================
    AUDIO SYNTHESIZER (Web Audio API)
@@ -264,6 +264,7 @@ const dialogueText = document.getElementById('dialogue-text');
 const documentViewer = document.getElementById('document-viewer');
 const textSampleContent = document.getElementById('text-sample-content');
 const timerBar = document.getElementById('timer-bar');
+const timerSeconds = document.getElementById('timer-seconds');
 const choiceButtons = document.querySelectorAll('.choice-btn');
 
 // Leaderboard Screen Elements
@@ -445,11 +446,16 @@ function startTimer() {
   gameState.timeLeft = TIMER_DURATION;
   timerBar.style.width = '100%';
   timerBar.style.backgroundColor = 'var(--color-success)';
+  timerSeconds.textContent = `⏳ ${TIMER_DURATION}s`;
 
   gameState.timerInterval = setInterval(() => {
     gameState.timeLeft -= 0.1;
     const pct = (gameState.timeLeft / TIMER_DURATION) * 100;
     timerBar.style.width = `${pct}%`;
+
+    // Update time balloon text in seconds
+    const secondsRounded = Math.ceil(gameState.timeLeft);
+    timerSeconds.textContent = `⏳ ${secondsRounded}s`;
 
     // Visual warning as time ticks down
     if (gameState.timeLeft < 10) {
@@ -461,6 +467,7 @@ function startTimer() {
 
     if (gameState.timeLeft <= 0) {
       clearInterval(gameState.timerInterval);
+      timerSeconds.textContent = `⏳ 0s`;
       handleTimeout();
     }
   }, 100);

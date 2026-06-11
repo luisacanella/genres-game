@@ -858,3 +858,26 @@ h1, h2, h3, h4 {
 .mt-4 {
   margin-top: 16px;
 }
+
+.school-subtitle {
+  font-size: 0.95rem;
+  color: var(--accent-cyan);
+  text-align: center;
+  font-weight: 600;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.timer-badge {
+  margin-left: auto;
+  font-family: var(--font-pixel);
+  font-size: 0.75rem;
+  background: rgba(15, 23, 42, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: var(--text-dark);
+  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
